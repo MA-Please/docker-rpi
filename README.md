@@ -13,12 +13,12 @@ Because I personally had a lot of trouble with SD-cards going bad in RPi's I rat
     2. /etc/hosts --this is where your hostname is linked to the loopback address (127.0.0.1)
   4. Set the IP-address to a valid address in your range.
     1. Open the "/etc/dhcpcd.conf" file in your favourite text editor.
-    2. Navigate to the bottom of the file and add the following lines (change them for your situation): 
+    2. Navigate to the bottom of the file and add the following lines (change them for your situation):
 ### Boot from USB drive
 In order to boot from a USB drive you also need to have an SD-card.
 1. If you have a running RPi first check if your usb-drive can be accessed by the system.
 2. Flash the image to your USB drive.
-3. Open the cmdline.txt in your boot partition on your SD-card and edit the **root=** parameter to **root=/dev/sda2** (you need to use /dev/sda2 because of the boot partition on the USB drive) and add **rootwait text** to the end. My cmdline.txt file contained this afterwards: 
+3. Open the cmdline.txt in your boot partition on your SD-card and edit the **root=** parameter to **root=/dev/sda2** (you need to use /dev/sda2 because of the boot partition on the USB drive) and add **rootwait text** to the end. My cmdline.txt file contained this afterwards:
 4. After booting your RPi you need to expand the filesystem of the USB drive. Because the option in raspi-config doesn't work in this config you will need to do this manually.
   1. If you started with a clean image and nothing is installed yet just go allong, otherwise I would recommend to backup your usb drive.
   2. Use **sudo fdisk /dev/sda**
@@ -31,7 +31,7 @@ In order to boot from a USB drive you also need to have an SD-card.
   8. You can check if the full capacity is used with **df -h**
 ## Install Docker
 In this chapter I will go over the different steps involved in installing Docker on RPi.
-1. To install Docker you can use the script provided by and maintained by Docker. Type **curl -sSL get.docker.com | sh** to start the script. This will take a while to run.
+1. To install Docker you can use the script provided by and maintained by Docker. Type ``curl -sSL get.docker.com | sh`` to start the script. This will take a while to run.
 2. After the installation you need to add your user to the docker group to be able to manage Docker. **sudo usermod -aG docker pi** is used in case you use the default "pi" user.
 3. To start the Docker service type **sudo systemctl enable docker** after doing this start the Docker daemon using **sudo systemctl start docker**. When you have done this you should be able to run the command **docker info**.
 ### Swarm mode (native Docker cluster)
