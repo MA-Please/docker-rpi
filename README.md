@@ -13,10 +13,11 @@ Because I personally had a lot of trouble with SD-cards going bad in RPi's I rat
     2. /etc/hosts --this is where your hostname is linked to the loopback address (127.0.0.1)
   4. Set the IP-address to a valid address in your range.
     1. Open the "/etc/dhcpcd.conf" file in your favourite text editor.
-    2. Navigate to the bottom of the file and add the following lines (change them for your situation): `interface eth0
-static ip_address=192.168.0.10/24
-static routers=192.168.0.1
-static domain_name_servers=192.168.0.1`
+    2. Navigate to the bottom of the file and add the following lines (change them for your situation):
+`interface eth0`
+`static ip_address=192.168.0.10/24`
+`static routers=192.168.0.1`
+`static domain_name_servers=192.168.0.1`
 ### Boot from USB drive
 In order to boot from a USB drive you also need to have an SD-card.
 1. If you have a running RPi first check if your usb-drive can be accessed by the system.
