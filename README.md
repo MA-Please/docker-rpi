@@ -38,3 +38,9 @@ dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 r
   6. Reboot the system after this: **sudo reboot**
   7. After rebooting the system type: **sudo resize2fs /dev/sda2**. This could take long depending on the size and speed of the USB drive.
   8. You can check if the full capacity is used with **df -h**
+## Install Docker
+In this chapter I will go over the different steps involved in installing Docker on RPi.
+1. To install Docker you can use the script provided by and maintained by Docker. Type **curl -sSL get.docker.com | sh** to start the script. This will take a while to run.
+2. After the installation you need to add your user to the docker group to be able to manage Docker. **sudo usermod -aG docker pi** is used in case you use the default "pi" user.
+3. To start the Docker service type **sudo systemctl enable docker** after doing this start the Docker daemon using **sudo systemctl start docker**. When you have done this you should be able to run the command **docker info**.
+### Swarm mode (native Docker cluster)
