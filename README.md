@@ -15,10 +15,10 @@ Because I personally had a lot of trouble with SD-cards going bad in RPi's I rat
     1. Open the "/etc/dhcpcd.conf" file in your favourite text editor.
     2. Navigate to the bottom of the file and add the following lines (change them for your situation):
 ```
-      interface eth0
-      static ip_address=192.168.0.10/24
-      static routers=192.168.0.1
-      static domain_name_servers=192.168.0.1
+interface eth0
+static ip_address=192.168.0.10/24
+static routers=192.168.0.1
+static domain_name_servers=192.168.0.1
 ```
 ### Boot from USB drive
 In order to boot from a USB drive you also need to have an SD-card.
@@ -26,7 +26,7 @@ In order to boot from a USB drive you also need to have an SD-card.
 2. Flash the image to your USB drive.
 3. Open the cmdline.txt in your boot partition on your SD-card and edit the **root=** parameter to **root=/dev/sda2** (you need to use /dev/sda2 because of the boot partition on the USB drive) and add **rootwait text** to the end. My cmdline.txt file contained this afterwards:
 ```
-  dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 root=/dev/sda2 rootfstype=ext4 rootwait text
+dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 root=/dev/sda2 rootfstype=ext4 rootwait text
 ```
 4. After booting your RPi you need to expand the filesystem of the USB drive. Because the option in raspi-config doesn't work in this config you will need to do this manually.
   1. If you started with a clean image and nothing is installed yet just go allong, otherwise I would recommend to backup your usb drive.
