@@ -51,3 +51,32 @@ In this chapter I will go over the different steps involved in installing Docker
   3. To start the Docker service type `sudo systemctl enable docker` after doing this start the Docker daemon using `sudo systemctl start docker`. When you have done this you should be able to run the command `docker info`.
 
 ### Swarm mode (native Docker cluster)
+Swarm is the native clustering technology for Docker. Running Docker in Swarm mode enables you to deploy and manage containers on a bunch of node's. One thing to keep in mind when using Docker Swarm is that containers aren't statefull, this means that if a node fail and the containers running on that node are restarted on another node the state isn't transfered so data that isn't saved isn't available anymore. A solution to this is develop applications that are stateless and make redundant systems that are cluster aware and sync their information constantly (a database application you can use for this is crate.io). Below you can see the different steps involved in setting up a Swarm.
+  1. To initiate a Swarm use the command `docker swarm init --advertise-addr 10.0.0.1` the advertise address should be changed to the address on which you can access your RPi and want to connect to your Swarm. The node on which you run this command will be a Manager node in your Swarm. After doing this command a token and the commands to add worker nodes will be displayed. My output looked like this:
+  ```
+docker swarm join \
+--token SWMTKN-1-2t3lg51f5n48g9p8xmbtg70fpirmtmvvt3nc38d6fsr0p9brd8-9d2f42stdw0h9eafak02hoknn \
+10.0.0.11:2377
+
+  ```
+  2. If you want to add worker nodes you need to use to commands you could see in the output of the previous step. You need to run this on every node you want to add as a worker node.
+  3. If you would like to add manager nodes to your Swarm you should run docker swarm join-token manager on the node where you initialy started your Swarm. This command will output the command and token needed to add manager nodes to your swarm.
+  
+## Using Docker & Swarm
+In this chapter you can read information on how to use Docker and Docker Swarm.
+### Commands
+You can read a bunch of Docker commands and what they do below.
+`docker info` -> display information over the Docker node you're working on
+`docker node ls` -> display a list of the nodes in your Docker Swarm
+`docker service ls` -> display a list of the services currently running in your Swarm
+`docker service ps ID/NAME` -> display information about the service defined by its name or id
+`docker ps` -> display the services running on the node you're working on
+`docker service create` -> create a service (in order to do this you will also need to use options of this command)
+`docker serivce update ID/NAME` -> update options of a running service (for example starting more replicas or replacing the running with a newer image)
+### Running a service
+In this topic we will start a simple http service displaying a web page.
+To start the service type `docker service create --name hypriot-httpd -p 8080:80 --replicas 2 hypriot/rpi-busybox-httpd`. In this command the `--name` option is used to set the name of the service, the `-p` option is used to forward trafic to a specific port to the containers and the `--replicas` option will set how many replicas are running. I use the hypriot/rpi-busybox-httpd image to deploy my containers as this is a simple httpd busybox that will show a simple page to test the cluster. You can test this by surfing to your clusters advertise address on port 8080, in my case this would be `10.0.0.11:8080`. You can use the `docker service ps hypriot-rpi` command to display information about the service.
+If you want to scale the service you can use `docker service update hypriot-httpd --replicas=4` to start 2 extra containers for a total of 4 running containers.
+### HA on Swarm (High Availability)
+We will use the service created in the previous step to give an example of the HA features of Swarm. To start of ensure the service is running correctly using `docker service ps hypriot-rpi` you should have 4 containers running. Now disconnect one of the RPi's in your cluster from your swarm (don't disconnect the manager you are working on for your own convenience). If you rerun `docker service ps hypriot-rpi` you should see that after a little time the container (or containers) that ran on the node you disconnected restarted on a different node.
+
