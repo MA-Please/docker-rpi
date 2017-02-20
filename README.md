@@ -61,7 +61,7 @@ docker swarm join \
   ```
   2. If you want to add worker nodes you need to use to commands you could see in the output of the previous step. You need to run this on every node you want to add as a worker node.
   3. If you would like to add manager nodes to your Swarm you should run docker swarm join-token manager on the node where you initialy started your Swarm. This command will output the command and token needed to add manager nodes to your swarm.
-  
+
 ## Using Docker & Swarm
 In this chapter you can read information on how to use Docker and Docker Swarm.
 ### Commands
@@ -80,3 +80,109 @@ If you want to scale the service you can use `docker service update hypriot-http
 ### HA on Swarm (High Availability)
 We will use the service created in the previous step to give an example of the HA features of Swarm. To start of ensure the service is running correctly using `docker service ps hypriot-rpi` you should have 4 containers running. Now disconnect one of the RPi's in your cluster from your swarm (don't disconnect the manager you are working on for your own convenience). If you rerun `docker service ps hypriot-rpi` you should see that after a little time the container (or containers) that ran on the node you disconnected restarted on a different node.
 
+# HA with keepalived on RPi
+
+## Add repository to list
+To be able to install keepalived on RPi you will need to add a repository in your sources list. To do this follow these steps:
+  1. Add a key for the server, do this with: `sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0x908332071dd2`
+	2. Make a file and open it to write: `sudo nano /etc/apt/sources.list.d/best-hosting.list`
+	3. Paste the following in the file: `deb http://deb.best-hosting.cz/debian/ raspberry main`
+
+## Install keepalived
+Follow these steps to install keepalived:
+  1. `sudo apt-get update`
+	2. `sudo apt-get install bh-keepalived` we install this version instead of the normal one because the normal one doesn't work on ARM.
+	3. Now use `rm -rf /etc/sysconfig/keepalived` to remove this file.
+	4. Make a directory in place of the file from the previous step: `mkdir /etc/sysconfig/keepalived`.
+	5. Use: `nano /etc/sysconfig/keepalived/keepalived.sysconfig` to add the config to the file:
+	```
+# Options for keepalived. See `keepalived --help' output and keepalived(8) and
+# keepalived.conf(5) man pages for a list of all options. Here are the most
+# common ones :
+#
+# --vrrp               -P    Only run with VRRP subsystem.
+# --check              -C    Only run with Health-checker subsystem.
+# --dont-release-vrrp  -V    Dont remove VRRP VIPs & VROUTEs on daemon stop.
+# --dont-release-ipvs  -I    Dont remove IPVS topology on daemon stop.
+# --dump-conf          -d    Dump the configuration data.
+# --log-detail         -D    Detailed log messages.
+# --log-facility       -S    0-7 Set local syslog facility (default=LOG_DAEMON)
+#
+
+KEEPALIVED_OPTIONS="-D"
+```
+  6. After this you need to execute: `wget http://deb.best-hosting.cz/_scripts_/keepalived/init.d/keepalived -O /etc/init.d/keepalived`
+	7. Make this file executable: `chmod +x /etc/init.d/keepalived`
+	8. And then use `update-rc.d keepalived defaults`
+	9. Now you need to start keepalived, do this with: `/etc/init.d/keepalived start`
+	10. In order to have a working system you need to edit the configuration of keepalived. You can edit the file with `sudo nano /etc/keepalived/keepalived.conf`. You can find the configurations I used at the next chapter.
+	11. After editing the file restart keepalived with: `/etc/init.d/keepalived restart`
+
+## Configuration of keepalived.
+Here you can find the config file's I used.
+### Node 1 - master
+```
+! Configuration File for keepalived
+
+global_defs {
+   router_id LVS_DEVEL
+}
+
+vrrp_instance VI_1 {
+    state MASTER
+    interface eth0
+    virtual_router_id 51
+    priority 101
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        192.168.0.20
+    }
+}
+```
+### Node 2 - backup
+```
+! Configuration File for keepalived
+
+global_defs {
+   router_id LVS_DEVEL
+}
+
+vrrp_instance VI_1 {
+    state BACKUP
+    interface eth0
+    virtual_router_id 51
+    priority 100
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        192.168.0.20
+    }
+}
+```
+### Node 3 - backup
+```
+! Configuration File for keepalived
+
+global_defs {
+   router_id LVS_DEVEL
+}
+
+vrrp_instance VI_1 {
+    state BACKUP
+    interface eth0
+    virtual_router_id 51
+    priority 99
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        192.168.0.20
+    }
+}
+```
