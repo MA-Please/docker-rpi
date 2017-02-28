@@ -66,12 +66,12 @@ docker swarm join \
 In this chapter you can read information on how to use Docker and Docker Swarm.
 ### Commands
 You can read a bunch of Docker commands and what they do below.
-`docker info` -> display information over the Docker node you're working on
-`docker node ls` -> display a list of the nodes in your Docker Swarm
-`docker service ls` -> display a list of the services currently running in your Swarm
-`docker service ps ID/NAME` -> display information about the service defined by its name or id
-`docker ps` -> display the services running on the node you're working on
-`docker service create` -> create a service (in order to do this you will also need to use options of this command)
+`docker info` -> display information over the Docker node you're working on<br />
+`docker node ls` -> display a list of the nodes in your Docker Swarm<br />
+`docker service ls` -> display a list of the services currently running in your Swarm<br />
+`docker service ps ID/NAME` -> display information about the service defined by its name or id<br />
+`docker ps` -> display the services running on the node you're working on<br />
+`docker service create` -> create a service (in order to do this you will also need to use options of this command)<br />
 `docker serivce update ID/NAME` -> update options of a running service (for example starting more replicas or replacing the running with a newer image)
 ### Running a service
 In this topic we will start a simple http service displaying a web page.
