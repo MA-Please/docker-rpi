@@ -91,32 +91,31 @@ To be able to install keepalived on RPi you will need to add a repository in you
 ## Install keepalived
 Follow these steps to install keepalived:
   1. `sudo apt-get update`
-	2. `sudo apt-get install bh-keepalived` we install this version instead of the normal one because the normal one doesn't work on ARM.
-	3. Now use `rm -rf /etc/sysconfig/keepalived` to remove this file.
-	4. Make a directory in place of the file from the previous step: `mkdir /etc/sysconfig/keepalived`.
-	5. Use: `nano /etc/sysconfig/keepalived/keepalived.sysconfig` to add the config to the file:
-	```
-\# Options for keepalived. See `keepalived --help' output and keepalived(8) and
-\# keepalived.conf(5) man pages for a list of all options. Here are the most
-\# common ones :
-\#
-\# --vrrp               -P    Only run with VRRP subsystem.
-\# --check              -C    Only run with Health-checker subsystem.
-\# --dont-release-vrrp  -V    Dont remove VRRP VIPs & VROUTEs on daemon stop.
-\# --dont-release-ipvs  -I    Dont remove IPVS topology on daemon stop.
-\# --dump-conf          -d    Dump the configuration data.
-\# --log-detail         -D    Detailed log messages.
-\# --log-facility       -S    0-7 Set local syslog facility (default=LOG_DAEMON)
-\#
-
+  2. `sudo apt-get install bh-keepalived` we install this version instead of the normal one because the normal one doesn't work on ARM.
+  3. Now use `rm -rf /etc/sysconfig/keepalived` to remove this file.
+  4. Make a directory in place of the file from the previous step: `mkdir /etc/sysconfig/keepalived`.
+  5. Use: `nano /etc/sysconfig/keepalived/keepalived.sysconfig` to add the config to the file:
+  ```
+# Options for keepalived. See `keepalived --help' output and keepalived(8) and
+# keepalived.conf(5) man pages for a list of all options. Here are the most
+# common ones :
+#
+# --vrrp               -P    Only run with VRRP subsystem.
+# --check              -C    Only run with Health-checker subsystem.
+# --dont-release-vrrp  -V    Dont remove VRRP VIPs & VROUTEs on daemon stop.
+# --dont-release-ipvs  -I    Dont remove IPVS topology on daemon stop.
+# --dump-conf          -d    Dump the configuration data.
+# --log-detail         -D    Detailed log messages.
+# --log-facility       -S    0-7 Set local syslog facility (default=LOG_DAEMON)
+#
 KEEPALIVED_OPTIONS="-D"
-	```
-  	6. After this you need to execute: `wget http://deb.best-hosting.cz/_scripts_/keepalived/init.d/keepalived -O /etc/init.d/keepalived`
-	7. Make this file executable: `chmod +x /etc/init.d/keepalived`
-	8. And then use `update-rc.d keepalived defaults`
-	9. Now you need to start keepalived, do this with: `/etc/init.d/keepalived start`
-	10. In order to have a working system you need to edit the configuration of keepalived. You can edit the file with `sudo nano /etc/keepalived/keepalived.conf`. You can find the configurations I used at the next chapter.
-	11. After editing the file restart keepalived with: `/etc/init.d/keepalived restart`
+  ```
+  6. After this you need to execute: `wget http://deb.best-hosting.cz/_scripts_/keepalived/init.d/keepalived -O /etc/init.d/keepalived`
+  7. Make this file executable: `chmod +x /etc/init.d/keepalived`
+  8. And then use `update-rc.d keepalived defaults`
+  9. Now you need to start keepalived, do this with: `/etc/init.d/keepalived start`
+  10. In order to have a working system you need to edit the configuration of keepalived. You can edit the file with `sudo nano /etc/keepalived/keepalived.conf`. You can find the configurations I used at the next chapter.
+  11. After editing the file restart keepalived with: `/etc/init.d/keepalived restart`
 
 ## Configuration of keepalived.
 Here you can find the config file's I used.
