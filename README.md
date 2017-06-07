@@ -110,8 +110,8 @@ Follow these steps to install keepalived:
 \#
 
 KEEPALIVED_OPTIONS="-D"
-```
-  6. After this you need to execute: `wget http://deb.best-hosting.cz/_scripts_/keepalived/init.d/keepalived -O /etc/init.d/keepalived`
+	```
+  	6. After this you need to execute: `wget http://deb.best-hosting.cz/_scripts_/keepalived/init.d/keepalived -O /etc/init.d/keepalived`
 	7. Make this file executable: `chmod +x /etc/init.d/keepalived`
 	8. And then use `update-rc.d keepalived defaults`
 	9. Now you need to start keepalived, do this with: `/etc/init.d/keepalived start`
